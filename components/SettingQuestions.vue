@@ -36,24 +36,25 @@
             >
               {{ item }}
             </th>
+            <th>削除</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(question, index) in questionsArray" :key="question.id">
+          <tr v-for="(question, index) in questions" :key="question.id">
             <td>{{ index + 1 }}</td>
             <td>
               <v-text-field
-                v-model.number="question.correctNumber"
+                :value="question.correctNumber"
                 type="number"
-                @change="changeCorrectNumber(index + 1, $event)"
+                @change="changeCorrectNumber(question.id, $event)"
               >
               </v-text-field>
             </td>
             <td>
               <v-text-field
-                v-model.number="question.point"
+                :value="question.point"
                 type="number"
-                @change="changePoint(index + 1, $event)"
+                @change="changePoint(question.id, $event)"
               ></v-text-field>
             </td>
             <td>{{ question.correctNumber * question.point }}</td>
@@ -61,8 +62,13 @@
               <v-select
                 :value="defaultKanten"
                 :items="kantens"
-                @change="changeKanten(index + 1, $event)"
+                @change="changeKanten(question.id, $event)"
               ></v-select>
+            </td>
+            <td>
+              <v-btn icon>
+                <v-icon @click="removeQuestion(question.id)">mdi-delete</v-icon>
+              </v-btn>
             </td>
           </tr>
         </tbody>
@@ -79,23 +85,18 @@ export default {
       defaultKanten: '知識・技能',
       tableHeader: ['No.', '問題数', '配点', '小計', '観点'],
       kantens: ['知識・技能', '思考・表現・判断'],
-      questionsArray: [
-        {
-          id: 1,
-          correctNumber: 5,
-          point: 2,
-          kanten: '知識・技能',
-        },
-      ],
     }
   },
   computed: {
+    questions() {
+      return this.$store.getters['questions/questions']
+    },
     totalScore() {
       return this.shikoTotal + this.chishikiTotal
     },
     shikoTotal() {
       // shikoの配列をつくる
-      const shikoArr = this.questionsArray.filter(
+      const shikoArr = this.questions.filter(
         (value) => value.kanten === '思考・表現・判断'
       )
       // shikoArrの合計を出す
@@ -107,7 +108,7 @@ export default {
     },
     chishikiTotal() {
       // shikoの配列をつくる
-      const chishikiArr = this.questionsArray.filter(
+      const chishikiArr = this.questions.filter(
         (value) => value.kanten === '知識・技能'
       )
       // chishikiArrの合計を出す
@@ -120,31 +121,20 @@ export default {
   },
   methods: {
     addQuestion() {
-      const newQuestion = {
-        id: this.questionsArray.length + 1,
-        correctNumber: 5,
-        point: 2,
-        kanten: '知識・技能',
-      }
-      this.questionsArray.push(newQuestion)
+      this.$store.dispatch('questions/addQuestions')
     },
+    removeQuestion(id) {
+      this.$store.dispatch('questions/removeQuestion', id)
+    },
+
     changeKanten(id, value) {
-      const target = this.questionsArray.filter(
-        (question) => question.id === id
-      )
-      target[0].kanten = value
+      this.$store.dispatch('questions/changeKanten', { id, value })
     },
     changePoint(id, value) {
-      const target = this.questionsArray.filter(
-        (question) => question.id === id
-      )
-      target[0].point = value
+      this.$store.dispatch('questions/changePoint', { id, value })
     },
     changeCorrectNumber(id, value) {
-      const target = this.questionsArray.filter(
-        (question) => question.id === id
-      )
-      target[0].correctNumber = value
+      this.$store.dispatch('questions/changeCorrectNumber', { id, value })
     },
   },
 }

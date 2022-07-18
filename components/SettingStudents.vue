@@ -15,9 +15,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(worker, index) in students" :key="index">
+            <!-- <tr v-for="(worker, index) in students" :key="index">
               <td v-for="(column, i) in worker" :key="i">{{ column }}</td>
-            </tr>
+            </tr> -->
           </tbody>
         </template>
       </v-simple-table>
@@ -32,20 +32,11 @@ export default {
       students: [],
     }
   },
-  computed: {
-    // students: {
-    //   get() {
-    //     return this.$store.getters['students/students']
-    //   },
-    //   set(value) {
-    //     const newStudents = value
-    //     this.$store.commit('students/addStudents', newStudents)
-    //   },
-    // },
-  },
+
   methods: {
     loadCsvFile(e) {
       this.message = ''
+      this.students = []
       const file = e.target.files[0]
 
       if (!file.type.match('text/csv')) {
@@ -54,17 +45,25 @@ export default {
       }
 
       const reader = new FileReader()
-      reader.readAsText(file)
-
+      reader.readAsText(file, 'Shift_JIS')
       reader.onload = () => {
         const lines = reader.result.split('\n')
+        // 最初の行を削除する
         lines.shift()
-        const linesArr = []
-        for (let i = 0; i < lines.length; i++) {
-          linesArr[i] = lines[i].split(',')
-        }
-        this.students = linesArr
+        lines.forEach((element, index) => {
+          // 区切り文字はカンマ
+          const studentData = element.split(',')
+          this.students.push({
+            id: index + 1,
+            name: studentData[1].slice(0, -1),
+          })
+        })
+        // storeにstudentsデータを送る
+        this.addStudents(this.students)
       }
+    },
+    addStudents(newStudents) {
+      this.$store.dispatch('students/addStudents', newStudents)
     },
   },
 }

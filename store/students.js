@@ -8,8 +8,12 @@ export const getters = {
 
 export const mutations = {
   addStudents(state, newStudents) {
-    state.students.push(newStudents)
+    state.students.push(...newStudents)
   },
 }
 
-export const actions = {}
+export const actions = {
+  addStudents({ commit }, newStudents) {
+    commit('addStudents', newStudents)
+  },
+}
