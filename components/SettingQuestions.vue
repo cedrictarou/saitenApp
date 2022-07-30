@@ -25,7 +25,7 @@
       </v-list>
     </div>
 
-    <v-simple-table fixed-header height="300px">
+    <v-simple-table fixed-header height="600px">
       <template #default>
         <thead>
           <tr>

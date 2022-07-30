@@ -1,12 +1,5 @@
 export const state = () => ({
-  questions: [
-    {
-      id: 1,
-      correctNumber: 5,
-      point: 2,
-      kanten: '知識・技能',
-    },
-  ],
+  questions: [],
 })
 
 export const getters = {
@@ -14,13 +7,11 @@ export const getters = {
 }
 
 export const mutations = {
-  addQuestions(state) {
-    const newQuestion = {
-      id: Date.now(),
-      correctNumber: 5,
-      point: 2,
-      kanten: '知識・技能',
-    }
+  getQuestions(state, questions) {
+    state.questions = []
+    state.questions = questions
+  },
+  addQuestions(state, newQuestion) {
     state.questions.push(newQuestion)
   },
   changeKanten(state, { id, value }) {
@@ -42,18 +33,39 @@ export const mutations = {
 
 export const actions = {
   addQuestions({ commit }) {
-    commit('addQuestions')
+    const newQuestion = {
+      id: Date.now(),
+      correctNumber: 5,
+      point: 2,
+      kanten: '知識・技能',
+    }
+    this.$db.collection('dbQuestions').add(newQuestion)
+    commit('addQuestions', newQuestion)
   },
-  changeKanten({ commit }, payload) {
+  async changeKanten({ commit }, payload) {
+    await this.$db.collection('dbQuestions').doc({ id: payload.id }).update({
+      kanten: payload.value,
+    })
     commit('changeKanten', payload)
   },
-  changePoint({ commit }, payload) {
+  async changePoint({ commit }, payload) {
+    await this.$db.collection('dbQuestions').doc({ id: payload.id }).update({
+      point: payload.value,
+    })
     commit('changePoint', payload)
   },
-  changeCorrectNumber({ commit }, payload) {
+  async changeCorrectNumber({ commit }, payload) {
+    await this.$db.collection('dbQuestions').doc({ id: payload.id }).update({
+      correctNumber: payload.value,
+    })
     commit('changeCorrectNumber', payload)
   },
-  removeQuestion({ commit }, payload) {
+  async removeQuestion({ commit }, payload) {
+    await this.$db.collection('dbQuestions').doc({ id: payload }).delete()
     commit('removeQuestion', payload)
+  },
+  async getQuestions({ commit }) {
+    const questions = await this.$db.collection('dbQuestions').get()
+    commit('getQuestions', questions)
   },
 }

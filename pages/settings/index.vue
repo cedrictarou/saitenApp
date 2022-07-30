@@ -11,6 +11,7 @@
       <SettingQuestions />
 
       <v-tab-item value="registerStudents">
+        <!-- 生徒の登録 -->
         <SettingStudents />
       </v-tab-item>
     </v-tabs-items>

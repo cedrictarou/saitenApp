@@ -2,6 +2,7 @@
   <div>
     <v-container>
       <h1 class="d-none">採点APP</h1>
+
       <div v-if="students && students.length === 0">
         <nuxt-link to="/settings"> 設定画面へ </nuxt-link>
       </div>
@@ -36,8 +37,9 @@
               <td>
                 <v-text-field
                   ref="focusThis"
-                  v-model.number="question.correctNumber"
+                  :value="question.correctNumber"
                   type="number"
+                  @change="changeCorrectNumber(question.id, $event)"
                   @keydown.prevent.tab.exact="moveNext(index)"
                   @keydown.prevent.shift.tab="movePrev(index)"
                   @keydown.prevent.down="moveNext(index)"
@@ -102,11 +104,14 @@ export default {
       return subtotal
     },
   },
+
   mounted() {
     this.$refs.focusThis[0].focus()
   },
   methods: {
-    updateScore() {},
+    changeCorrectNumber(id, value) {
+      this.$store.dispatch('questions/changeCorrectNumber', { id, value })
+    },
     nextStudent() {
       if (this.studentNum === this.students.length - 1) {
         alert('No more students!!!')

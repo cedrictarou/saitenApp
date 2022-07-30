@@ -6,7 +6,7 @@
       <p>{{ message }}</p>
     </div>
     <div>
-      <v-simple-table>
+      <v-simple-table fixed-header height="300px">
         <template #default>
           <thead>
             <tr>
@@ -15,9 +15,10 @@
             </tr>
           </thead>
           <tbody>
-            <!-- <tr v-for="(worker, index) in students" :key="index">
-              <td v-for="(column, i) in worker" :key="i">{{ column }}</td>
-            </tr> -->
+            <tr v-for="student in students" :key="student.id">
+              <td>{{ student.id }}</td>
+              <td>{{ student.name }}</td>
+            </tr>
           </tbody>
         </template>
       </v-simple-table>
@@ -31,6 +32,9 @@ export default {
       message: '',
       students: [],
     }
+  },
+  async fetch() {
+    this.students = await this.$db.collection('dbStudents').get()
   },
 
   methods: {
