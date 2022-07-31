@@ -1,13 +1,17 @@
 <template>
   <div>
-    <v-container>
+    <div
+      v-if="
+        (students && students.length === 0) ||
+        (questions && questions.length === 0)
+      "
+    >
+      <nuxt-link to="/settings"> 設定画面へ </nuxt-link>
+    </div>
+    <v-container v-else>
       <h1 class="d-none">採点APP</h1>
 
-      <div v-if="students && students.length === 0">
-        <nuxt-link to="/settings"> 設定画面へ </nuxt-link>
-      </div>
-
-      <div v-else class="d-flex justify-space-between align-center ma-5">
+      <div class="d-flex justify-space-between align-center ma-5">
         <div><span>No.</span>{{ students[studentNum].id }}</div>
         <div><span>名前:</span>{{ students[studentNum].name }}</div>
         <div><span>知識・技能:</span>{{ chishikiTotal }}</div>
@@ -61,6 +65,7 @@
 
 <script>
 export default {
+  middleware: 'check-excisting-data',
   data() {
     return {
       test: true,

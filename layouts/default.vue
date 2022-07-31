@@ -36,7 +36,6 @@
 
 <script>
 export default {
-  // middleware: 'get-current-project',
   data: () => ({
     drawer: null,
     items: [
