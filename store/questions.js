@@ -26,6 +26,10 @@ export const mutations = {
     const target = state.questions.filter((question) => question.id === id)[0]
     target.correctNumber = value
   },
+  changeSetNumber(state, { id, value }) {
+    const target = state.questions.filter((question) => question.id === id)[0]
+    target.setNumber = value
+  },
   removeQuestion(state, id) {
     state.questions = state.questions.filter((question) => question.id !== id)
   },
@@ -35,10 +39,12 @@ export const actions = {
   addQuestions({ commit }) {
     const newQuestion = {
       id: Date.now(),
-      correctNumber: 5,
+      correctNumber: 0,
+      setNumber: 5,
       point: 2,
       kanten: '知識・技能',
     }
+    newQuestion.subtotal = newQuestion.setNumber * newQuestion.point
     this.$db.collection('dbQuestions').add(newQuestion)
     commit('addQuestions', newQuestion)
   },
@@ -48,17 +54,46 @@ export const actions = {
     })
     commit('changeKanten', payload)
   },
-  async changePoint({ commit }, payload) {
-    await this.$db.collection('dbQuestions').doc({ id: payload.id }).update({
-      point: payload.value,
-    })
+  async changePoint({ commit, getters }, payload) {
+    // subtotalを計算する処理を書く
+    const target = getters.questions.filter(
+      (question) => question.id === payload.id
+    )[0]
+    const newSubtotal = Number(target.setNumber) * Number(payload.value)
+
+    await this.$db
+      .collection('dbQuestions')
+      .doc({ id: payload.id })
+      .update({
+        point: Number(payload.value),
+        subtotal: newSubtotal,
+      })
     commit('changePoint', payload)
   },
   async changeCorrectNumber({ commit }, payload) {
-    await this.$db.collection('dbQuestions').doc({ id: payload.id }).update({
-      correctNumber: payload.value,
-    })
+    await this.$db
+      .collection('dbQuestions')
+      .doc({ id: payload.id })
+      .update({
+        correctNumber: Number(payload.value),
+      })
     commit('changeCorrectNumber', payload)
+  },
+  async changeSetNumber({ commit, getters }, payload) {
+    // subtotalを計算する処理を書く
+    const target = getters.questions.filter(
+      (question) => question.id === payload.id
+    )[0]
+    const newSubtotal = Number(target.point) * Number(payload.value)
+
+    await this.$db
+      .collection('dbQuestions')
+      .doc({ id: payload.id })
+      .update({
+        setNumber: Number(payload.value),
+        subtotal: newSubtotal,
+      })
+    commit('changeSetNumber', payload)
   },
   async removeQuestion({ commit }, payload) {
     await this.$db.collection('dbQuestions').doc({ id: payload }).delete()

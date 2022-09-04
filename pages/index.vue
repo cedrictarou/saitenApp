@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- 生徒と問題が登録されていない場合 -->
     <div
       v-if="
         (students && students.length === 0) ||
@@ -8,6 +9,7 @@
     >
       <nuxt-link to="/settings"> 設定画面へ </nuxt-link>
     </div>
+    <!-- 生徒と問題が登録されている場合 -->
     <v-container v-else>
       <h1 class="d-none">採点APP</h1>
 
@@ -18,7 +20,7 @@
         <div><span>思考・表現・判断:</span>{{ shikoTotal }}</div>
         <h3>
           合計
-          <span class="pink--text text--lighten-2">{{ totalScore }}</span
+          <span class="pink--text text-h5">{{ totalScore }}</span
           >/100
         </h3>
       </div>
@@ -41,9 +43,13 @@
               <td>
                 <v-text-field
                   ref="focusThis"
+                  :rules="rules"
                   :value="question.correctNumber"
                   type="number"
-                  @change="changeCorrectNumber(question.id, $event)"
+                  @input="
+                    changeCorrectNumber(question.id, $event),
+                      getMaxPoint(question.setNumber)
+                  "
                   @keydown.prevent.tab.exact="moveNext(index)"
                   @keydown.prevent.shift.tab="movePrev(index)"
                   @keydown.prevent.down="moveNext(index)"
@@ -51,7 +57,10 @@
                 ></v-text-field>
               </td>
               <td><span>x</span>{{ question.point }}</td>
+
+              <!-- subtotal -->
               <td>{{ question.correctNumber * question.point }}</td>
+              <td>{{ question.subtotal }}</td>
               <td>
                 {{ question.kanten }}
               </td>
@@ -68,10 +77,22 @@ export default {
   middleware: 'check-excisting-data',
   data() {
     return {
-      test: true,
+      target: 0,
       studentNum: 0,
       selectedByDefault: '知識・技能',
-      items: ['No.', '正解数', '配点', '小計', '観点'],
+      items: ['No.', '正解数', '配点', '小計', '配分', '観点'],
+      maxPoint: 10,
+      minPoint: 0,
+      isValidated: false,
+      rules: [
+        (value) => !!value || '値を入力してください。',
+        (value) =>
+          value > this.minPoint ||
+          `${this.minPoint + 1}以上の値を入力してください`,
+        (value) =>
+          value <= this.maxPoint ||
+          `${this.maxPoint}以下の値を入力してください`,
+      ],
     }
   },
   computed: {
@@ -114,6 +135,9 @@ export default {
     this.$refs.focusThis[0].focus()
   },
   methods: {
+    getMaxPoint(value) {
+      this.maxPoint = value
+    },
     changeCorrectNumber(id, value) {
       this.$store.dispatch('questions/changeCorrectNumber', { id, value })
     },

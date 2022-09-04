@@ -19,7 +19,9 @@
         </v-list-item>
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title>合計:{{ totalScore }}</v-list-item-title>
+            <v-list-item-title :class="{ 'red--text': isValidated }"
+              >合計:{{ totalScore }}</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -44,9 +46,9 @@
             <td>{{ index + 1 }}</td>
             <td>
               <v-text-field
-                :value="question.correctNumber"
+                :value="question.setNumber"
                 type="number"
-                @change="changeCorrectNumber(question.id, $event)"
+                @input="changeSetNumber(question.id, $event)"
               >
               </v-text-field>
             </td>
@@ -54,15 +56,15 @@
               <v-text-field
                 :value="question.point"
                 type="number"
-                @change="changePoint(question.id, $event)"
+                @input="changePoint(question.id, $event)"
               ></v-text-field>
             </td>
-            <td>{{ question.correctNumber * question.point }}</td>
+            <td>{{ question.setNumber * question.point }}</td>
             <td>
               <v-select
                 :value="defaultKanten"
                 :items="kantens"
-                @change="changeKanten(question.id, $event)"
+                @input="changeKanten(question.id, $event)"
               ></v-select>
             </td>
             <td>
@@ -85,6 +87,7 @@ export default {
       defaultKanten: '知識・技能',
       tableHeader: ['No.', '問題数', '配点', '小計', '観点'],
       kantens: ['知識・技能', '思考・表現・判断'],
+      isValidated: false,
     }
   },
   computed: {
@@ -102,7 +105,7 @@ export default {
       // shikoArrの合計を出す
       let subtotal = 0
       shikoArr.forEach((item) => {
-        subtotal += item.correctNumber * item.point
+        subtotal += item.setNumber * item.point
       })
       return subtotal
     },
@@ -114,12 +117,13 @@ export default {
       // chishikiArrの合計を出す
       let subtotal = 0
       chishikiArr.forEach((item) => {
-        subtotal += item.correctNumber * item.point
+        subtotal += item.setNumber * item.point
       })
       return subtotal
     },
   },
   methods: {
+    validateMassage(val) {},
     addQuestion() {
       this.$store.dispatch('questions/addQuestions')
     },
@@ -133,8 +137,8 @@ export default {
     changePoint(id, value) {
       this.$store.dispatch('questions/changePoint', { id, value })
     },
-    changeCorrectNumber(id, value) {
-      this.$store.dispatch('questions/changeCorrectNumber', { id, value })
+    changeSetNumber(id, value) {
+      this.$store.dispatch('questions/changeSetNumber', { id, value })
     },
   },
 }
