@@ -20,7 +20,9 @@
         <div><span>思考・表現・判断:</span>{{ shikoTotal }}</div>
         <h3>
           合計
-          <span class="pink--text text-h5">{{ totalScore }}</span
+          <span :class="{ 'pink--text text-h5': isValidated }">{{
+            totalScore
+          }}</span
           >/100
         </h3>
       </div>
@@ -103,7 +105,9 @@ export default {
       return this.$store.getters['students/students']
     },
     totalScore() {
-      return this.shikoTotal + this.chishikiTotal
+      const totalScore = this.shikoTotal + this.chishikiTotal
+      this.alertOverHundred(totalScore)
+      return totalScore
     },
     shikoTotal() {
       // shikoの配列をつくる
@@ -135,6 +139,14 @@ export default {
     this.$refs.focusThis[0].focus()
   },
   methods: {
+    alertOverHundred(value) {
+      if (value > 100) {
+        this.isValidated = true
+        alert('Stop!! The score is more than 100!!!')
+      } else {
+        this.isValidated = false
+      }
+    },
     getMaxPoint(value) {
       this.maxPoint = value
     },
@@ -142,6 +154,11 @@ export default {
       this.$store.dispatch('questions/changeCorrectNumber', { id, value })
     },
     nextStudent() {
+      if (this.totalScore > 100) {
+        // totalScoreが100を超えていたらアラートを出して処理を進めない
+        this.alertOverHundred(this.totalScore)
+        return
+      }
       if (this.studentNum === this.students.length - 1) {
         alert('No more students!!!')
       } else {
