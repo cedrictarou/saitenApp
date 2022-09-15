@@ -12,64 +12,80 @@
     <!-- 生徒と問題が登録されている場合 -->
     <v-container v-else>
       <h1 class="d-none">採点APP</h1>
+      <div class="status-info">
+        <div class="d-flex justify-space-between align-center ma-5">
+          <div><span>No.</span>{{ students[studentNum].id }}</div>
+          <div><span>名前:</span>{{ students[studentNum].name }}</div>
+          <div><span>知識・技能:</span>{{ chishikiTotal }}</div>
+          <div><span>思考・表現・判断:</span>{{ shikoTotal }}</div>
+          <h3>
+            合計
+            <span :class="{ 'pink--text text-h5': isLessThanHundred }">{{
+              totalScore
+            }}</span
+            >/100
+          </h3>
+        </div>
 
-      <div class="d-flex justify-space-between align-center ma-5">
-        <div><span>No.</span>{{ students[studentNum].id }}</div>
-        <div><span>名前:</span>{{ students[studentNum].name }}</div>
-        <div><span>知識・技能:</span>{{ chishikiTotal }}</div>
-        <div><span>思考・表現・判断:</span>{{ shikoTotal }}</div>
-        <h3>
-          合計
-          <span :class="{ 'pink--text text-h5': isValidated }">{{
-            totalScore
-          }}</span
-          >/100
-        </h3>
+        <div class="d-flex justify-end ma-5">
+          <v-btn
+            :disabled="isValidated ? false : true"
+            color="success"
+            class="mr-4"
+            @click="nextStudent()"
+            >Next</v-btn
+          >
+          <v-btn color="error" class="mr-4" @click="reset">Clear</v-btn>
+        </div>
       </div>
-      <div class="d-flex justify-end ma-5">
-        <v-btn @click="nextStudent">Next</v-btn>
-      </div>
 
-      <v-simple-table>
-        <template #default>
-          <thead>
-            <tr>
-              <th v-for="(item, index) in items" :key="index" class="text-left">
-                <span>{{ item }}</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(question, index) in questions" :key="question.id">
-              <td>{{ index + 1 }}</td>
-              <td>
-                <v-text-field
-                  ref="focusThis"
-                  :rules="rules"
-                  :value="question.correctNumber"
-                  type="number"
-                  @input="
-                    changeCorrectNumber(question.id, $event),
-                      getMaxPoint(question.setNumber)
-                  "
-                  @keydown.prevent.tab.exact="moveNext(index)"
-                  @keydown.prevent.shift.tab="movePrev(index)"
-                  @keydown.prevent.down="moveNext(index)"
-                  @keydown.prevent.up="movePrev(index)"
-                ></v-text-field>
-              </td>
-              <td><span>x</span>{{ question.point }}</td>
+      <v-form ref="form" v-model="isValidated">
+        <v-simple-table>
+          <template #default>
+            <thead>
+              <tr>
+                <th
+                  v-for="(item, index) in items"
+                  :key="index"
+                  class="text-left"
+                >
+                  <span>{{ item }}</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(question, index) in questions" :key="question.id">
+                <td>{{ index + 1 }}</td>
+                <td>
+                  <v-text-field
+                    ref="focusThis"
+                    :rules="rules"
+                    :value="correctNumber"
+                    type="number"
+                    required
+                    @input="
+                      changeCorrectNumber(question.id, $event),
+                        getMaxPoint(question.setNumber)
+                    "
+                    @keydown.prevent.tab.exact="moveNext(index)"
+                    @keydown.prevent.shift.tab="movePrev(index)"
+                    @keydown.prevent.down="moveNext(index)"
+                    @keydown.prevent.up="movePrev(index)"
+                  ></v-text-field>
+                </td>
+                <td><span>x</span>{{ question.point }}</td>
 
-              <!-- subtotal -->
-              <td>{{ question.correctNumber * question.point }}</td>
-              <td>{{ question.subtotal }}</td>
-              <td>
-                {{ question.kanten }}
-              </td>
-            </tr>
-          </tbody>
-        </template>
-      </v-simple-table>
+                <!-- subtotal -->
+                <td>{{ correctNumber * question.point }}</td>
+                <td>{{ question.subtotal }}</td>
+                <td>
+                  {{ question.kanten }}
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+      </v-form>
     </v-container>
   </div>
 </template>
@@ -79,18 +95,24 @@ export default {
   middleware: 'check-excisting-data',
   data() {
     return {
+      isValidated: false,
+      score: {
+        chishiki: 0,
+        shiko: 0,
+      },
       target: 0,
       studentNum: 0,
       selectedByDefault: '知識・技能',
       items: ['No.', '正解数', '配点', '小計', '配分', '観点'],
+      correctNumber: null,
       maxPoint: 10,
       minPoint: 0,
-      isValidated: false,
+      isLessThanHundred: false,
       rules: [
-        (value) => !!value || '値を入力してください。',
+        (value) => value !== null || '値を入力してください。',
         (value) =>
-          value > this.minPoint ||
-          `${this.minPoint + 1}以上の値を入力してください`,
+          value >= this.minPoint ||
+          `${this.minPoint}以上の値を入力してください`,
         (value) =>
           value <= this.maxPoint ||
           `${this.maxPoint}以下の値を入力してください`,
@@ -141,10 +163,10 @@ export default {
   methods: {
     alertOverHundred(value) {
       if (value > 100) {
-        this.isValidated = true
+        this.isLessThanHundred = true
         alert('Stop!! The score is more than 100!!!')
       } else {
-        this.isValidated = false
+        this.isLessThanHundred = false
       }
     },
     getMaxPoint(value) {
@@ -154,15 +176,25 @@ export default {
       this.$store.dispatch('questions/changeCorrectNumber', { id, value })
     },
     nextStudent() {
-      if (this.totalScore > 100) {
+      if (this.totalScore > 100 || this.isValidated === false) {
         // totalScoreが100を超えていたらアラートを出して処理を進めない
+        // validateがかかった状態だとすすまない
         this.alertOverHundred(this.totalScore)
-        return
-      }
-      if (this.studentNum === this.students.length - 1) {
-        alert('No more students!!!')
       } else {
         this.studentNum++
+        const scoreInfo = {
+          id: this.studentNum,
+          chishiki: this.chishikiTotal,
+          shiko: this.shikoTotal,
+        }
+        this.$store.dispatch('students/addScoreToStudent', scoreInfo)
+        // 値の初期化
+        this.reset()
+        if (this.studentNum > this.students.length - 1) {
+          alert('結果を表示します')
+          this.$router.push('/result')
+          this.studentNum = 0
+        }
       }
     },
     focusInput(index) {
@@ -180,6 +212,20 @@ export default {
         this.focusInput(Number(index - 1))
       }
     },
+    reset() {
+      this.isValidated = false
+      this.$refs.form.reset()
+    },
   },
 }
 </script>
+<style lang="scss" scoped>
+.status-info {
+  background-color: white;
+  border-radius: 13px;
+  padding: 1rem;
+  position: sticky;
+  top: 0.5rem;
+  z-index: 10;
+}
+</style>

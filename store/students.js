@@ -14,6 +14,11 @@ export const mutations = {
     state.students = []
     state.students = students
   },
+  addScoreToStudent(state, scoreInfo) {
+    const target = state.students.filter((s) => s.id === scoreInfo.id)[0]
+    target.chishiki = scoreInfo.chishiki
+    target.shiko = scoreInfo.shiko
+  },
 }
 export const actions = {
   // 最初にDBにデータが有るかをチェックする
@@ -32,5 +37,12 @@ export const actions = {
   async getStudents({ commit }) {
     const students = await this.$db.collection('dbStudents').get()
     commit('getStudents', students)
+  },
+  async addScoreToStudent({ commit }, scoreInfo) {
+    await this.$db.collection('dbStudents').doc({ id: scoreInfo.id }).update({
+      chishiki: scoreInfo.chishiki,
+      shiko: scoreInfo.shiko,
+    })
+    commit('addScoreToStudent', scoreInfo)
   },
 }
