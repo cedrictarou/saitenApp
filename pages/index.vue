@@ -71,6 +71,8 @@
                     @keydown.prevent.shift.tab="movePrev(index)"
                     @keydown.prevent.down="moveNext(index)"
                     @keydown.prevent.up="movePrev(index)"
+                    @keydown.prevent.enter="moveNext(index)"
+                    @keydown.meta.enter.exact="nextStudent()"
                   ></v-text-field>
                 </td>
                 <td><span>x</span>{{ question.point }}</td>
@@ -175,6 +177,11 @@ export default {
     changeCorrectNumber(id, value) {
       this.$store.dispatch('questions/changeCorrectNumber', { id, value })
     },
+    shortCutKeyForNextStudent(e) {
+      if (e.ctrlKey || e.metaKey) {
+        this.nextStudent()
+      }
+    },
     nextStudent() {
       if (this.totalScore > 100 || this.isValidated === false) {
         // totalScoreが100を超えていたらアラートを出して処理を進めない
@@ -190,6 +197,8 @@ export default {
         this.$store.dispatch('students/addScoreToStudent', scoreInfo)
         // 値の初期化
         this.reset()
+        // フォーカスを最初にあわせる
+        this.focusInput(0)
         if (this.studentNum > this.students.length - 1) {
           alert('結果を表示します')
           this.$router.push('/result')
