@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" app>
+    <v-navigation-drawer v-model="drawer" app class="side-menu">
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="text-h6"> メニュー </v-list-item-title>
@@ -47,3 +47,8 @@ export default {
   }),
 }
 </script>
+<style lang="scss" scoped>
+.side-menu {
+  z-index: 20;
+}
+</style>

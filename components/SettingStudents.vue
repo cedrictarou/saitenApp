@@ -49,7 +49,7 @@ export default {
       }
 
       const reader = new FileReader()
-      reader.readAsText(file, 'Shift_JIS')
+      reader.readAsText(file)
       reader.onload = () => {
         const lines = reader.result.split('\n')
         // 最初の行を削除する
