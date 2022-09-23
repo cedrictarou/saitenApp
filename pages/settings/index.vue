@@ -7,12 +7,14 @@
     </v-tabs>
 
     <v-tabs-items v-model="tabDefault">
-      <!-- 問題の登録 -->
-      <SettingQuestions />
+      <v-tab-item value="settingQuestions">
+        <!-- 問題の登録 -->
+        <SettingQuestions />
+      </v-tab-item>
 
       <v-tab-item value="registerStudents">
         <!-- 生徒の登録 -->
-        <SettingStudents />
+        <SettingStudents class="scroll" />
       </v-tab-item>
     </v-tabs-items>
   </v-container>
@@ -29,4 +31,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.scroll {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 500px;
+}
 </style>

@@ -10,22 +10,42 @@
       <nuxt-link to="/settings"> 設定画面へ </nuxt-link>
     </div>
     <!-- 生徒と問題が登録されている場合 -->
-    <v-container v-else>
-      <h1 class="d-none">採点APP</h1>
-      <div class="status-info">
-        <div class="d-flex justify-space-between align-center ma-5">
-          <div><span>No.</span>{{ students[studentNum].id }}</div>
-          <div><span>名前:</span>{{ students[studentNum].name }}</div>
-          <div><span>知識・技能:</span>{{ chishikiTotal }}</div>
-          <div><span>思考・表現・判断:</span>{{ shikoTotal }}</div>
-          <h3>
-            合計
-            <span :class="{ 'pink--text text-h5': isLessThanHundred }">{{
-              totalScore
-            }}</span
-            >/100
-          </h3>
-        </div>
+    <v-container v-else class="status-info">
+      <div>
+        <h1>採点ページ</h1>
+        <v-list class="d-flex justify-space-between align-center ma-5">
+          <v-list-item>
+            <v-list-item-content>
+              <span>No.</span>{{ students[studentNum].id }}
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item
+            ><v-list-item-content>
+              <span>名前:</span>{{ students[studentNum].name }}
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-content>
+              <span>知識・技能:</span>{{ chishikiTotal }}
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-content>
+              <span>思考・表現・判断:</span>{{ shikoTotal }}
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-content>
+              <h3>
+                合計
+                <span :class="{ 'pink--text text-h5': isLessThanHundred }">{{
+                  totalScore
+                }}</span
+                >/100
+              </h3>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
 
         <div class="d-flex justify-end ma-5">
           <v-btn
@@ -40,7 +60,7 @@
       </div>
 
       <v-form ref="form" v-model="isValidated">
-        <v-simple-table>
+        <v-simple-table fixed-header height="600px">
           <template #default>
             <thead>
               <tr>
@@ -118,6 +138,7 @@ export default {
         (value) =>
           value <= this.maxPoint ||
           `${this.maxPoint}以下の値を入力してください`,
+        (value) => /[0-9]/.test(value) || '半角英数字を入力してください',
       ],
     }
   },
@@ -224,17 +245,22 @@ export default {
     reset() {
       this.isValidated = false
       this.$refs.form.reset()
+      this.focusInput(0)
     },
   },
 }
 </script>
 <style lang="scss" scoped>
+.saiten-page {
+  // max-height: 100vh;
+  // position: static;
+}
 .status-info {
-  background-color: white;
-  border-radius: 13px;
-  padding: 1rem;
-  position: sticky;
-  top: 0.5rem;
-  z-index: 10;
+  // background-color: rgb(177, 26, 26);
+  // margin-top: 1rem;
+  // position: sticky;
+  // // max-height: 10rem;
+  // top: 4rem;
+  // z-index: 10;
 }
 </style>

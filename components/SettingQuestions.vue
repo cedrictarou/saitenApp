@@ -1,5 +1,5 @@
 <template>
-  <v-tab-item value="settingQuestions">
+  <div>
     <div class="mt-3 d-flex justify-space-between align-center">
       <v-btn outlined @click="addQuestion">
         <v-icon class="mr-2">mdi-plus-circle-outline</v-icon>追加する</v-btn
@@ -76,7 +76,7 @@
         </tbody>
       </template>
     </v-simple-table>
-  </v-tab-item>
+  </div>
 </template>
 
 <script>

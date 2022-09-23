@@ -6,7 +6,7 @@
       <p>{{ message }}</p>
     </div>
     <div>
-      <v-simple-table fixed-header height="300px">
+      <v-simple-table>
         <template #default>
           <thead>
             <tr>
