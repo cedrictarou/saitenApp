@@ -1,10 +1,21 @@
 <template>
-  <div>
+  <div class="mt-2">
     <h2>生徒登録</h2>
     <div class="mt-2">
-      <input type="file" @change="loadCsvFile" />
-      <p>{{ message }}</p>
+      <v-file-input
+        v-model="fileName"
+        accept=".csv"
+        truncate-length="10"
+        :disabled="isFile"
+        :clearable="isFile"
+        :label="message"
+        @change="loadCsvFile"
+      />
+      <v-btn color="error" class="ml-2" @click="reset">
+        <v-icon>mdi-trash-can-outline</v-icon>リセット</v-btn
+      >
     </div>
+
     <div>
       <v-simple-table>
         <template #default>
@@ -29,8 +40,10 @@
 export default {
   data() {
     return {
-      message: '',
+      message: 'csvファイルをアップロードしてください。',
       students: [],
+      isFile: false,
+      fileName: null,
     }
   },
   async fetch() {
@@ -38,10 +51,18 @@ export default {
   },
 
   methods: {
-    loadCsvFile(e) {
-      this.message = ''
+    reset() {
+      this.$store.dispatch('students/resetStudents')
       this.students = []
-      const file = e.target.files[0]
+      this.isFile = false
+      this.fileName = null
+      this.message = 'csvファイルをアップロードしてください。'
+    },
+    loadCsvFile(e) {
+      this.message = 'アップロードされています。'
+      this.students = []
+      this.isFile = true
+      const file = e
 
       if (!file.type.match('text/csv')) {
         this.message = 'CSVファイルを選択してください'
@@ -65,6 +86,7 @@ export default {
         // storeにstudentsデータを送る
         this.addStudents(this.students)
       }
+      this.isFile = true
     },
     addStudents(newStudents) {
       this.$store.dispatch('students/addStudents', newStudents)

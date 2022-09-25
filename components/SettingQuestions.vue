@@ -1,30 +1,37 @@
 <template>
   <div>
-    <div class="mt-3 d-flex justify-space-between align-center">
-      <v-btn outlined @click="addQuestion">
-        <v-icon class="mr-2">mdi-plus-circle-outline</v-icon>追加する</v-btn
-      >
-      <v-list class="d-flex">
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title
-              >知識・技能:{{ chishikiTotal }}</v-list-item-title
-            >
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title>思考・判断:{{ shikoTotal }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title :class="{ 'red--text': isValidated }"
-              >合計:{{ totalScore }}</v-list-item-title
-            >
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
+    <div class="mt-3">
+      <div class="btn-group">
+        <v-btn color="success" @click="addQuestion">
+          <v-icon>mdi-plus-circle-outline</v-icon>追加する</v-btn
+        >
+        <v-btn color="error" class="ml-2" @click="reset">
+          <v-icon>mdi-trash-can-outline</v-icon>リセット</v-btn
+        >
+      </div>
+      <div class="score-group d-flex justify-end align-center">
+        <v-list class="d-flex">
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title
+                >知識・技能:{{ chishikiTotal }}</v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>思考・判断:{{ shikoTotal }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title :class="{ 'red--text': isValidated }"
+                >合計:{{ totalScore }}</v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </div>
     </div>
 
     <v-simple-table fixed-header height="600px">
@@ -122,8 +129,20 @@ export default {
       return subtotal
     },
   },
+  watch: {
+    totalScore() {
+      this.validateMassage()
+    },
+  },
   methods: {
-    validateMassage(val) {},
+    reset() {
+      this.$store.dispatch('questions/resetQuestions')
+    },
+    validateMassage() {
+      if (this.totalScore > 100) {
+        alert('合計点数が100点以上になっています。')
+      }
+    },
     addQuestion() {
       this.$store.dispatch('questions/addQuestions')
     },

@@ -33,6 +33,9 @@ export const mutations = {
   removeQuestion(state, id) {
     state.questions = state.questions.filter((question) => question.id !== id)
   },
+  resetQuestions(state) {
+    state.questions = []
+  },
 }
 
 export const actions = {
@@ -102,5 +105,9 @@ export const actions = {
   async getQuestions({ commit }) {
     const questions = await this.$db.collection('dbQuestions').get()
     commit('getQuestions', questions)
+  },
+  async resetQuestions({ commit }) {
+    await this.$db.collection('questions').delete()
+    commit('resetQuestions')
   },
 }

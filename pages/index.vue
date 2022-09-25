@@ -252,15 +252,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .saiten-page {
-  // max-height: 100vh;
-  // position: static;
 }
 .status-info {
-  // background-color: rgb(177, 26, 26);
-  // margin-top: 1rem;
-  // position: sticky;
-  // // max-height: 10rem;
-  // top: 4rem;
-  // z-index: 10;
 }
 </style>

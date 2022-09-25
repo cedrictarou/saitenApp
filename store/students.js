@@ -19,7 +19,11 @@ export const mutations = {
     target.chishiki = scoreInfo.chishiki
     target.shiko = scoreInfo.shiko
   },
+  resetStudents(state) {
+    state.students = []
+  },
 }
+
 export const actions = {
   // 最初にDBにデータが有るかをチェックする
   async nuxtClientInit({ dispatch }) {
@@ -37,6 +41,10 @@ export const actions = {
   async getStudents({ commit }) {
     const students = await this.$db.collection('dbStudents').get()
     commit('getStudents', students)
+  },
+  async resetStudents({ commit }) {
+    await this.$db.collection('dbStudents').delete()
+    commit('resetStudents')
   },
   async addScoreToStudent({ commit }, scoreInfo) {
     await this.$db.collection('dbStudents').doc({ id: scoreInfo.id }).update({
