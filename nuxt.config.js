@@ -81,4 +81,12 @@ export default {
       },
     },
   },
+  // githubでのdeploy
+  router: {
+    base: '/saitenApp/',
+  },
+
+  generate: {
+    dir: 'docs',
+  },
 }
