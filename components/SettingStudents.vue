@@ -1,6 +1,22 @@
 <template>
   <div class="mt-2">
     <h2>生徒登録</h2>
+    <div class="d-flex justify-end">
+      <Description>
+        <template #default>
+          <p>csvファイルをアップロードしてください。</p>
+          <p>1行目に出席番号と名前などのタイトルを設定してください。</p>
+          <p>2行目以降に生徒の出席番号と名前を記載してください。</p>
+          <p>
+            新しいクラスの採点をするときや生徒のデータを消したいときは<v-icon>mdi-trash-can-outline</v-icon>リセットボタンを押してください。
+          </p>
+          <p>
+            登録が完了したら<span class="font-weight-bold">採点ページ</span
+            >に移動して採点をしてください。
+          </p>
+        </template>
+      </Description>
+    </div>
     <div class="mt-2">
       <v-file-input
         v-model="fileName"
@@ -37,7 +53,9 @@
   </div>
 </template>
 <script>
+import Description from './tool/Description.vue'
 export default {
+  components: { Description },
   data() {
     return {
       message: 'csvファイルをアップロードしてください。',
@@ -49,7 +67,6 @@ export default {
   async fetch() {
     this.students = await this.$db.collection('dbStudents').get()
   },
-
   methods: {
     reset() {
       this.$store.dispatch('students/resetStudents')
@@ -63,12 +80,10 @@ export default {
       this.students = []
       this.isFile = true
       const file = e
-
       if (!file.type.match('text/csv')) {
         this.message = 'CSVファイルを選択してください'
         return
       }
-
       const reader = new FileReader()
       reader.readAsText(file)
       reader.onload = () => {
