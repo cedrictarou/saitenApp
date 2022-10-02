@@ -33,6 +33,7 @@
           </Description>
         </div>
       </div>
+
       <div class="score-group d-flex justify-end align-center">
         <v-list class="d-flex">
           <v-list-item>

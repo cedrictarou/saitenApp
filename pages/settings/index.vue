@@ -14,7 +14,7 @@
 
       <v-tab-item value="registerStudents">
         <!-- 生徒の登録 -->
-        <SettingStudents class="scroll" />
+        <SettingStudents />
       </v-tab-item>
     </v-tabs-items>
   </v-container>
@@ -31,9 +31,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.scroll {
-  overflow-y: scroll;
-  overflow-x: hidden;
-  height: 500px;
-}
 </style>

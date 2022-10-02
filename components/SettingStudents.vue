@@ -1,22 +1,25 @@
 <template>
   <div class="mt-2">
-    <h2>生徒登録</h2>
-    <div class="d-flex justify-end">
-      <Description>
-        <template #default>
-          <p>csvファイルをアップロードしてください。</p>
-          <p>1行目に出席番号と名前などのタイトルを設定してください。</p>
-          <p>2行目以降に生徒の出席番号と名前を記載してください。</p>
-          <p>
-            新しいクラスの採点をするときや生徒のデータを消したいときは<v-icon>mdi-trash-can-outline</v-icon>リセットボタンを押してください。
-          </p>
-          <p>
-            登録が完了したら<span class="font-weight-bold">採点ページ</span
-            >に移動して採点をしてください。
-          </p>
-        </template>
-      </Description>
+    <div>
+      <h2>生徒登録</h2>
+      <div class="d-flex justify-end">
+        <Description>
+          <template #default>
+            <p>csvファイルをアップロードしてください。</p>
+            <p>1行目に出席番号と名前などのタイトルを設定してください。</p>
+            <p>2行目以降に生徒の出席番号と名前を記載してください。</p>
+            <p>
+              新しいクラスの採点をするときや生徒のデータを消したいときは<v-icon>mdi-trash-can-outline</v-icon>リセットボタンを押してください。
+            </p>
+            <p>
+              登録が完了したら<span class="font-weight-bold">採点ページ</span
+              >に移動して採点をしてください。
+            </p>
+          </template>
+        </Description>
+      </div>
     </div>
+
     <div class="mt-2">
       <v-file-input
         v-model="fileName"
@@ -32,24 +35,22 @@
       >
     </div>
 
-    <div>
-      <v-simple-table>
-        <template #default>
-          <thead>
-            <tr>
-              <th class="text-left">ID</th>
-              <th class="text-left">Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="student in students" :key="student.id">
-              <td>{{ student.id }}</td>
-              <td>{{ student.name }}</td>
-            </tr>
-          </tbody>
-        </template>
-      </v-simple-table>
-    </div>
+    <v-simple-table fixed-header height="500px">
+      <template #default>
+        <thead>
+          <tr>
+            <th class="text-left">ID</th>
+            <th class="text-left">Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="student in students" :key="student.id">
+            <td>{{ student.id }}</td>
+            <td>{{ student.name }}</td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
   </div>
 </template>
 <script>

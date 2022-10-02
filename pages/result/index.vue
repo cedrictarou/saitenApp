@@ -1,7 +1,7 @@
 <template>
   <v-container class="result-page">
-    <h1>result</h1>
-    <v-simple-table>
+    <h2>採点一覧</h2>
+    <v-simple-table fixed-header height="700px" class="mt-5">
       <template #default>
         <thead>
           <tr>
@@ -25,7 +25,7 @@
         </tbody>
       </template>
     </v-simple-table>
-    <div class="d-flex justify-end mt-3">
+    <div class="d-flex justify-end mt-5">
       <v-btn color="primary" depressed @click="exportCSV()">エクスポート</v-btn>
     </div>
   </v-container>
