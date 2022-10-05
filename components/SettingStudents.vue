@@ -41,12 +41,16 @@
           <tr>
             <th class="text-left">ID</th>
             <th class="text-left">Name</th>
+            <th class="text-left">出席・欠席</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="student in students" :key="student.id">
             <td>{{ student.id }}</td>
             <td>{{ student.name }}</td>
+            <td>
+              <v-select :value="default_item" :items="items"></v-select>
+            </td>
           </tr>
         </tbody>
       </template>
@@ -63,6 +67,8 @@ export default {
       students: [],
       isFile: false,
       fileName: null,
+      default_item: '出席',
+      items: ['出席', '欠席'],
     }
   },
   async fetch() {
@@ -110,3 +116,5 @@ export default {
   },
 }
 </script>
+<style scoped lang="scss">
+</style>
