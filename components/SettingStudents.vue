@@ -49,7 +49,11 @@
             <td>{{ student.id }}</td>
             <td>{{ student.name }}</td>
             <td>
-              <v-select :value="default_item" :items="items"></v-select>
+              <v-select
+                :value="default_item"
+                :items="items"
+                @change="addAbsence(student.id)"
+              ></v-select>
             </td>
           </tr>
         </tbody>
@@ -75,6 +79,12 @@ export default {
     this.students = await this.$db.collection('dbStudents').get()
   },
   methods: {
+    addAbsence(id) {
+      // 欠席を選択された生徒はisAttendingがfalseになる
+      const target = this.students.filter((s) => s.id === id)[0]
+      target.isAttending = !target.isAttending
+      this.$store.dispatch('students/addAbsence', target)
+    },
     reset() {
       this.$store.dispatch('students/resetStudents')
       this.students = []
@@ -103,6 +113,7 @@ export default {
           this.students.push({
             id: index + 1,
             name: studentData[1].slice(0, -1),
+            isAttending: true,
           })
         })
         // storeにstudentsデータを送る
