@@ -1,7 +1,16 @@
 <template>
   <v-container class="result-page">
-    <h1>result</h1>
-    <v-simple-table>
+    <h2>採点一覧</h2>
+    <div class="btn-group d-flex justify-end mt-5">
+      <v-btn color="error" width="150" @click="clear">
+        <v-icon>mdi-trash-can-outline</v-icon>クリア</v-btn
+      >
+      <v-btn color="primary" class="ml-2" @click="exportCSV()">
+        <v-icon class="mr-1">mdi-monitor-arrow-down-variant</v-icon>
+        エクスポート</v-btn
+      >
+    </div>
+    <v-simple-table fixed-header height="700px" class="mt-5">
       <template #default>
         <thead>
           <tr>
@@ -25,9 +34,6 @@
         </tbody>
       </template>
     </v-simple-table>
-    <div class="d-flex justify-end mt-3">
-      <v-btn color="primary" depressed @click="exportCSV()">エクスポート</v-btn>
-    </div>
   </v-container>
 </template>
 <script>
@@ -43,6 +49,13 @@ export default {
     },
   },
   methods: {
+    clear() {
+      const message = '本当に削除してよろしいですか。'
+      const result = confirm(message)
+      if (result) {
+        this.$store.dispatch('students/resetStudents')
+      }
+    },
     exportCSV() {
       // ダウンロードするCSVファイル名を指定する
       const filename = 'download.csv'

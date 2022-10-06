@@ -10,42 +10,82 @@
       <nuxt-link to="/settings"> 設定画面へ </nuxt-link>
     </div>
     <!-- 生徒と問題が登録されている場合 -->
-    <v-container v-else class="status-info">
+    <v-container v-else>
       <div>
-        <h1>採点ページ</h1>
-        <v-list class="d-flex justify-space-between align-center ma-5">
-          <v-list-item>
-            <v-list-item-content>
-              <span>No.</span>{{ students[studentNum].id }}
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item
-            ><v-list-item-content>
-              <span>名前:</span>{{ students[studentNum].name }}
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-content>
-              <span>知識・技能:</span>{{ chishikiTotal }}
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-content>
-              <span>思考・表現・判断:</span>{{ shikoTotal }}
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-content>
-              <h3>
-                合計
-                <span :class="{ 'pink--text text-h5': isLessThanHundred }">{{
-                  totalScore
-                }}</span
-                >/100
-              </h3>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
+        <h2 class="text-center">採点ページ</h2>
+        <div class="d-flex justify-end mr-5">
+          <Description>
+            <template #default>
+              <p>採点を行うページです。</p>
+              <p>
+                各問いの正当数を入力して自動でそれぞれの観点別と合計を計算します。
+              </p>
+              <p>
+                入力フォームの移動は矢印キーやエンターキーで行うことができます。
+              </p>
+              <p>
+                <v-btn small color="success">Next</v-btn>をクリック、または<span
+                  class="font-weight-bold"
+                >
+                  Ctrl + Enter</span
+                >を押すことで次の生徒の採点を行うことができます。
+              </p>
+              <p>
+                採点中の入力を消すときは
+                <v-btn small color="error">Clear</v-btn>を押してくください。
+              </p>
+              <p>
+                値が入力されていなかったり、指定された値以上の数値が入力されているとエラーが出ます。
+              </p>
+            </template>
+          </Description>
+        </div>
+
+        <div class="status-info">
+          <v-list
+            class="
+              d-flex
+              justify-space-between
+              align-center
+              ma-5
+              blue
+              lighten-5
+              rounded
+            "
+          >
+            <v-list-item>
+              <v-list-item-content>
+                <span>No.</span>{{ students[studentNum].id }}
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item
+              ><v-list-item-content>
+                <span>名前:</span>{{ students[studentNum].name }}
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-content>
+                <span>知識・技能:</span>{{ chishikiTotal }}
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-content>
+                <span>思考・表現・判断:</span>{{ shikoTotal }}
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-content>
+                <h3>
+                  合計
+                  <span :class="{ 'pink--text text-h5': isLessThanHundred }">{{
+                    totalScore
+                  }}</span
+                  >/100
+                </h3>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </div>
 
         <div class="d-flex justify-end ma-5">
           <v-btn
@@ -55,12 +95,12 @@
             @click="nextStudent()"
             >Next</v-btn
           >
-          <v-btn color="error" class="mr-4" @click="reset">Clear</v-btn>
+          <v-btn color="error" @click="reset">Clear</v-btn>
         </div>
       </div>
 
       <v-form ref="form" v-model="isValidated">
-        <v-simple-table fixed-header height="600px">
+        <v-simple-table fixed-header height="500px">
           <template #default>
             <thead>
               <tr>
@@ -113,7 +153,9 @@
 </template>
 
 <script>
+import Description from '~/components/tool/Description.vue'
 export default {
+  components: { Description },
   middleware: 'check-excisting-data',
   data() {
     return {
@@ -179,7 +221,6 @@ export default {
       return subtotal
     },
   },
-
   mounted() {
     this.$refs.focusThis[0].focus()
   },
@@ -251,8 +292,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.saiten-page {
-}
-.status-info {
-}
 </style>

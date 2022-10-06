@@ -1,22 +1,25 @@
 <template>
   <div class="mt-2">
-    <h2>生徒登録</h2>
-    <div class="d-flex justify-end">
-      <Description>
-        <template #default>
-          <p>csvファイルをアップロードしてください。</p>
-          <p>1行目に出席番号と名前などのタイトルを設定してください。</p>
-          <p>2行目以降に生徒の出席番号と名前を記載してください。</p>
-          <p>
-            新しいクラスの採点をするときや生徒のデータを消したいときは<v-icon>mdi-trash-can-outline</v-icon>リセットボタンを押してください。
-          </p>
-          <p>
-            登録が完了したら<span class="font-weight-bold">採点ページ</span
-            >に移動して採点をしてください。
-          </p>
-        </template>
-      </Description>
+    <div>
+      <h2>生徒登録</h2>
+      <div class="d-flex justify-end">
+        <Description>
+          <template #default>
+            <p>csvファイルをアップロードしてください。</p>
+            <p>1行目に出席番号と名前などのタイトルを設定してください。</p>
+            <p>2行目以降に生徒の出席番号と名前を記載してください。</p>
+            <p>
+              新しいクラスの採点をするときや生徒のデータを消したいときは<v-icon>mdi-trash-can-outline</v-icon>リセットボタンを押してください。
+            </p>
+            <p>
+              登録が完了したら<span class="font-weight-bold">採点ページ</span
+              >に移動して採点をしてください。
+            </p>
+          </template>
+        </Description>
+      </div>
     </div>
+
     <div class="mt-2">
       <v-file-input
         v-model="fileName"
@@ -32,24 +35,30 @@
       >
     </div>
 
-    <div>
-      <v-simple-table>
-        <template #default>
-          <thead>
-            <tr>
-              <th class="text-left">ID</th>
-              <th class="text-left">Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="student in students" :key="student.id">
-              <td>{{ student.id }}</td>
-              <td>{{ student.name }}</td>
-            </tr>
-          </tbody>
-        </template>
-      </v-simple-table>
-    </div>
+    <v-simple-table fixed-header height="500px">
+      <template #default>
+        <thead>
+          <tr>
+            <th class="text-left">ID</th>
+            <th class="text-left">Name</th>
+            <th class="text-left">出席・欠席</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="student in students" :key="student.id">
+            <td>{{ student.id }}</td>
+            <td>{{ student.name }}</td>
+            <td>
+              <v-select
+                :value="default_item"
+                :items="items"
+                @change="addAbsence(student.id)"
+              ></v-select>
+            </td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
   </div>
 </template>
 <script>
@@ -62,12 +71,20 @@ export default {
       students: [],
       isFile: false,
       fileName: null,
+      default_item: '出席',
+      items: ['出席', '欠席'],
     }
   },
   async fetch() {
     this.students = await this.$db.collection('dbStudents').get()
   },
   methods: {
+    addAbsence(id) {
+      // 欠席を選択された生徒はisAttendingがfalseになる
+      const target = this.students.filter((s) => s.id === id)[0]
+      target.isAttending = !target.isAttending
+      this.$store.dispatch('students/addAbsence', target)
+    },
     reset() {
       this.$store.dispatch('students/resetStudents')
       this.students = []
@@ -96,6 +113,7 @@ export default {
           this.students.push({
             id: index + 1,
             name: studentData[1].slice(0, -1),
+            isAttending: true,
           })
         })
         // storeにstudentsデータを送る
@@ -109,3 +127,5 @@ export default {
   },
 }
 </script>
+<style scoped lang="scss">
+</style>
