@@ -50,9 +50,9 @@
             <td>{{ student.name }}</td>
             <td>
               <v-select
-                :value="default_item"
+                :value="student.isAttending ? '出席' : '欠席'"
                 :items="items"
-                @change="addAbsence(student.id)"
+                @input="addAbsence(student.id)"
               ></v-select>
             </td>
           </tr>
@@ -71,7 +71,6 @@ export default {
       students: [],
       isFile: false,
       fileName: null,
-      default_item: '出席',
       items: ['出席', '欠席'],
     }
   },
@@ -80,10 +79,7 @@ export default {
   },
   methods: {
     addAbsence(id) {
-      // 欠席を選択された生徒はisAttendingがfalseになる
-      const target = this.students.filter((s) => s.id === id)[0]
-      target.isAttending = !target.isAttending
-      this.$store.dispatch('students/addAbsence', target)
+      this.$store.dispatch('students/addAbsence', id)
     },
     reset() {
       this.$store.dispatch('students/resetStudents')

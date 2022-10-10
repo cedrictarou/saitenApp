@@ -29,7 +29,11 @@
             <td>{{ student.name }}</td>
             <td>{{ student.chishiki }}</td>
             <td>{{ student.shiko }}</td>
-            <td>{{ student.chishiki + student.shiko }}</td>
+            <td>
+              {{
+                student.isAttending ? student.chishiki + student.shiko : '欠席'
+              }}
+            </td>
           </tr>
         </tbody>
       </template>

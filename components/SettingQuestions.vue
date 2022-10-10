@@ -94,7 +94,11 @@
             <td>{{ question.setNumber * question.point }}</td>
             <td>
               <v-select
-                :value="defaultKanten"
+                :value="
+                  question.kanten === '知識・技能'
+                    ? '知識・技能'
+                    : '思考・表現・判断'
+                "
                 :items="kantens"
                 @input="changeKanten(question.id, $event)"
               ></v-select>
@@ -118,7 +122,6 @@ export default {
   data() {
     return {
       tabDefault: 'settingQuestions',
-      defaultKanten: '知識・技能',
       tableHeader: ['No.', '問題数', '配点', '小計', '観点'],
       kantens: ['知識・技能', '思考・表現・判断'],
       isValidated: false,

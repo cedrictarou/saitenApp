@@ -166,7 +166,6 @@ export default {
       },
       target: 0,
       studentNum: 0,
-      selectedByDefault: '知識・技能',
       items: ['No.', '正解数', '配点', '小計', '配分', '観点'],
       correctNumber: null,
       maxPoint: 10,
@@ -189,7 +188,11 @@ export default {
       return this.$store.getters['questions/questions']
     },
     students() {
-      return this.$store.getters['students/students']
+      const allStudents = this.$store.getters['students/students']
+      const attendingStudents = allStudents.filter(
+        (s) => s.isAttending === true
+      )
+      return attendingStudents
     },
     totalScore() {
       const totalScore = this.shikoTotal + this.chishikiTotal
@@ -244,27 +247,35 @@ export default {
         this.nextStudent()
       }
     },
-    nextStudent() {
+    async nextStudent() {
       if (this.totalScore > 100 || this.isValidated === false) {
         // totalScoreが100を超えていたらアラートを出して処理を進めない
         // validateがかかった状態だとすすまない
         this.alertOverHundred(this.totalScore)
       } else {
-        this.studentNum++
         const scoreInfo = {
-          id: this.studentNum,
+          id: this.students[this.studentNum].id,
           chishiki: this.chishikiTotal,
           shiko: this.shikoTotal,
         }
-        this.$store.dispatch('students/addScoreToStudent', scoreInfo)
-        // 値の初期化
-        this.reset()
-        // フォーカスを最初にあわせる
-        this.focusInput(0)
-        if (this.studentNum > this.students.length - 1) {
+        await this.$store.dispatch('students/addScoreToStudent', scoreInfo)
+
+        // 最後の生徒かどうかを判断する
+        if (this.studentNum === this.students.length - 1) {
+          // 最後の生徒
           alert('結果を表示します')
           this.$router.push('/result')
+          // 値の初期化
+          this.reset()
           this.studentNum = 0
+        } else {
+          // 最後じゃない場合
+          // 次の生徒用にstudentNumを上げる
+          this.studentNum++
+          // 値の初期化
+          this.reset()
+          // フォーカスを最初にあわせる
+          this.focusInput(0)
         }
       }
     },

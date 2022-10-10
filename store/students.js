@@ -23,8 +23,8 @@ export const mutations = {
     state.students = []
   },
   addAbsence(state, payload) {
-    const target = state.students.filter((s) => s.id === payload.id)[0]
-    target.isAttending = payload.isAttending
+    const target = state.students.filter((s) => s.id === payload)[0]
+    target.isAttending = !target.isAttending
   },
 }
 
@@ -58,8 +58,8 @@ export const actions = {
     commit('addScoreToStudent', scoreInfo)
   },
   async addAbsence({ commit }, payload) {
-    await this.$db.collection('dbStudents').doc({ id: payload.id }).update({
-      isAttending: payload.isAttending,
+    await this.$db.collection('dbStudents').doc({ id: payload }).update({
+      isAttending: false,
     })
     commit('addAbsence', payload)
   },
