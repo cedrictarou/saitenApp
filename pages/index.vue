@@ -41,50 +41,33 @@
           </Description>
         </div>
 
-        <div class="status-info">
-          <v-list
-            class="
-              d-flex
-              justify-space-between
-              align-center
-              ma-5
-              blue
-              lighten-5
-              rounded
-            "
-          >
-            <v-list-item>
-              <v-list-item-content>
-                <span>No.</span>{{ students[studentNum].id }}
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item
-              ><v-list-item-content>
-                <span>名前:</span>{{ students[studentNum].name }}
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>
-                <span>知識・技能:</span>{{ chishikiTotal }}
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>
-                <span>思考・表現・判断:</span>{{ shikoTotal }}
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>
-                <h3>
-                  合計
-                  <span :class="{ 'pink--text text-h5': isLessThanHundred }">{{
-                    totalScore
-                  }}</span
-                  >/100
-                </h3>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
+        <div class="status-bar blue lighten-5 rounded mt-5 mx-2 pa-2">
+          <v-row>
+            <v-col
+              md="4"
+              cols="12"
+              class="d-flex justify-space-around align-center"
+            >
+              <div><span>No.</span>{{ students[studentNum].id }}</div>
+              <div><span>名前:</span>{{ students[studentNum].name }}</div>
+            </v-col>
+            <v-col
+              md="8"
+              cols="12"
+              class="d-flex justify-space-around align-center"
+            >
+              <div><span>知識・技能:</span>{{ chishikiTotal }}</div>
+              <div><span>思考・表現・判断:</span>{{ shikoTotal }}</div>
+              <div>
+                合計
+                <span
+                  :class="{ 'pink--text': isLessThanHundred }"
+                  class="text-h5"
+                  >{{ totalScore }}</span
+                >/100
+              </div>
+            </v-col>
+          </v-row>
         </div>
 
         <div class="d-flex justify-end ma-5">
