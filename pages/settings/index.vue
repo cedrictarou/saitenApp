@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1>settings</h1>
+    <h2 class="text-center">設定ページ</h2>
     <v-tabs v-model="tabDefault">
       <v-tab href="#settingQuestions">問題登録</v-tab>
       <v-tab href="#registerStudents">生徒登録</v-tab>

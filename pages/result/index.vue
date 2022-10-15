@@ -1,16 +1,18 @@
 <template>
   <v-container class="result-page">
-    <h2>採点一覧</h2>
+    <h2 class="text-center">採点一覧ページ</h2>
+
     <div class="btn-group d-flex justify-end mt-5">
-      <v-btn color="error" width="150" @click="clear">
-        <v-icon>mdi-trash-can-outline</v-icon>クリア</v-btn
-      >
-      <v-btn color="primary" class="ml-2" @click="exportCSV()">
+      <v-btn color="success" @click="exportCSV()">
         <v-icon class="mr-1">mdi-monitor-arrow-down-variant</v-icon>
         エクスポート</v-btn
       >
+      <v-btn class="ml-2" color="error" width="150" @click="clear">
+        <v-icon>mdi-trash-can-outline</v-icon>クリア</v-btn
+      >
     </div>
-    <v-simple-table fixed-header height="700px" class="mt-5">
+
+    <v-simple-table fixed-header class="mt-5">
       <template #default>
         <thead>
           <tr>

@@ -41,50 +41,43 @@
           </Description>
         </div>
 
-        <div class="status-info">
-          <v-list
-            class="
-              d-flex
-              justify-space-between
-              align-center
-              ma-5
-              blue
-              lighten-5
-              rounded
-            "
-          >
-            <v-list-item>
-              <v-list-item-content>
-                <span>No.</span>{{ students[studentNum].id }}
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item
-              ><v-list-item-content>
-                <span>名前:</span>{{ students[studentNum].name }}
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>
-                <span>知識・技能:</span>{{ chishikiTotal }}
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>
-                <span>思考・表現・判断:</span>{{ shikoTotal }}
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>
-                <h3>
-                  合計
-                  <span :class="{ 'pink--text text-h5': isLessThanHundred }">{{
-                    totalScore
-                  }}</span
-                  >/100
-                </h3>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
+        <div
+          class="
+            status-bar
+            blue
+            lighten-5
+            rounded
+            mt-5
+            mx-2
+            pa-5
+            text-md-h5
+            d-flex
+            flex-column flex-sm-row
+            justify-space-between
+            flex-wrap
+          "
+        >
+          <!-- status-bar--name -->
+          <div class="mr-auto d-flex">
+            <div>No.</div>
+            <div class="ml-2">{{ students[studentNum].id }}</div>
+            <div class="ml-2">{{ students[studentNum].name }}</div>
+          </div>
+          <!-- status-bar--score -->
+          <div class="d-flex mt-5 mt-sm-0 justify-space-between">
+            <div class="mr-2">
+              知識・技能: <span>{{ chishikiTotal }}</span>
+            </div>
+            <div class="mr-2">
+              思考・表現・判断: <span>{{ shikoTotal }}</span>
+            </div>
+            <div>
+              合計:
+              <span :class="{ 'pink--text': isLessThanHundred }" class="mr-1">{{
+                totalScore
+              }}</span>
+            </div>
+          </div>
         </div>
 
         <div class="d-flex justify-end ma-5">
@@ -93,9 +86,13 @@
             color="success"
             class="mr-4"
             @click="nextStudent()"
-            >Next</v-btn
           >
-          <v-btn color="error" @click="reset">Clear</v-btn>
+            <v-icon>mdi-arrow-right-thick</v-icon>
+            Next</v-btn
+          >
+          <v-btn color="error" @click="reset"
+            ><v-icon>mdi-trash-can-outline</v-icon>Clear</v-btn
+          >
         </div>
       </div>
 
@@ -303,4 +300,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.status-bar--name {
+  // min-width: 20rem;
+}
 </style>
