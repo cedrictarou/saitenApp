@@ -51,6 +51,7 @@
             mx-2
             pa-5
             text-md-h5
+            font-weight-bold
             d-flex
             flex-column flex-sm-row
             justify-space-between
@@ -59,21 +60,21 @@
         >
           <!-- status-bar--name -->
           <div class="mr-auto d-flex">
-            <div>No.</div>
-            <div class="ml-2">{{ students[studentNum].id }}</div>
-            <div class="ml-2">{{ students[studentNum].name }}</div>
+            <div class="mr-2">No.</div>
+            <div class="mr-2">{{ students[studentNum].id }}</div>
+            <div>{{ students[studentNum].name }}</div>
           </div>
           <!-- status-bar--score -->
           <div class="d-flex mt-5 mt-sm-0 justify-space-between">
             <div class="mr-2">
-              知識・技能: <span>{{ chishikiTotal }}</span>
+              知識・技能: <span class="mr-2">{{ chishikiTotal }}</span>
             </div>
             <div class="mr-2">
-              思考・表現・判断: <span>{{ shikoTotal }}</span>
+              思考・表現・判断: <span class="mr-2">{{ shikoTotal }}</span>
             </div>
             <div>
               合計:
-              <span :class="{ 'pink--text': isLessThanHundred }" class="mr-1">{{
+              <span :class="{ 'pink--text': isLessThanHundred }">{{
                 totalScore
               }}</span>
             </div>
@@ -300,7 +301,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.status-bar--name {
-  // min-width: 20rem;
-}
 </style>

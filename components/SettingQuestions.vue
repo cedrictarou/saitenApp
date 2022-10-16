@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="mt-3">
-      <div class="btn-group d-flex">
+      <div class="btn-group d-flex mt-2">
         <v-btn color="success" @click="addQuestion">
           <v-icon>mdi-plus-circle-outline</v-icon>追加する</v-btn
         >
@@ -125,9 +125,18 @@ export default {
       tableHeader: ['No.', '問題数', '配点', '小計', '観点'],
       kantens: ['知識・技能', '思考・表現・判断'],
       isValidated: false,
+      // questions: [],
     }
   },
+  // async fetch() {
+  //   this.questions = await this.$db.collection('dbStudents').get()
+  // },
+
   computed: {
+    isSetQuestions() {
+      const result = this.totalScore === 100 || false
+      return result
+    },
     questions() {
       return this.$store.getters['questions/questions']
     },
@@ -162,6 +171,9 @@ export default {
   watch: {
     totalScore() {
       this.validateMassage()
+    },
+    isSetQuestions() {
+      this.$emit('update:isSetQuestions', this.isSetQuestions)
     },
   },
   methods: {
