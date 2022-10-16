@@ -1,7 +1,6 @@
 <template>
   <div class="mt-2">
     <div>
-      <h2>生徒登録</h2>
       <div class="d-flex justify-end">
         <Description>
           <template #default>
@@ -77,6 +76,17 @@ export default {
   async fetch() {
     this.students = await this.$db.collection('dbStudents').get()
   },
+  computed: {
+    isSetStudents() {
+      const result = this.students.length > 0 || false
+      return result
+    },
+  },
+  watch: {
+    isSetStudents() {
+      this.$emit('update:isSetStudents', this.isSetStudents)
+    },
+  },
   methods: {
     addAbsence(id) {
       this.$store.dispatch('students/addAbsence', id)
@@ -98,17 +108,17 @@ export default {
         return
       }
       const reader = new FileReader()
-      reader.readAsText(file)
+      reader.readAsText(file, 'UTF-8')
       reader.onload = () => {
         const lines = reader.result.split('\n')
         // 最初の行を削除する
         lines.shift()
-        lines.forEach((element, index) => {
+        lines.forEach((element) => {
           // 区切り文字はカンマ
           const studentData = element.split(',')
           this.students.push({
-            id: index + 1,
-            name: studentData[1].slice(0, -1),
+            id: Number(studentData[0]),
+            name: studentData[1],
             isAttending: true,
           })
         })

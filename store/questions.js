@@ -107,7 +107,7 @@ export const actions = {
     commit('getQuestions', questions)
   },
   async resetQuestions({ commit }) {
-    await this.$db.collection('questions').delete()
+    await this.$db.collection('dbQuestions').delete()
     commit('resetQuestions')
   },
 }
