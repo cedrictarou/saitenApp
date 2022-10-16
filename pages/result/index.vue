@@ -29,12 +29,11 @@
           <tr v-for="student in students" :key="student.name">
             <td>{{ student.id }}</td>
             <td>{{ student.name }}</td>
+            <td>{{ student.isAttending ? '出席' : '欠席' }}</td>
             <td>{{ student.chishiki }}</td>
             <td>{{ student.shiko }}</td>
             <td>
-              {{
-                student.isAttending ? student.chishiki + student.shiko : '欠席'
-              }}
+              {{ student.chishiki + student.shiko }}
             </td>
           </tr>
         </tbody>
@@ -46,7 +45,14 @@
 export default {
   data() {
     return {
-      categories: ['No.', 'Name', '知識・理解', '思考・表現', '合計'],
+      categories: [
+        'No.',
+        'Name',
+        '出席・欠席',
+        '知識・理解',
+        '思考・表現',
+        '合計',
+      ],
     }
   },
   computed: {
@@ -64,16 +70,23 @@ export default {
     },
     exportCSV() {
       // ダウンロードするCSVファイル名を指定する
-      const filename = 'download.csv'
+      const filename = prompt('ファイル名を設定してください。')
       // studentsにtotalを追加して新しい配列を作る
       const studentsWithTotal = []
       this.students.forEach((student) => {
         student.total = Number(student.chishiki + student.shiko)
         studentsWithTotal.push(student)
       })
-
       // CSVデータの整形
-      const header = Object.keys(studentsWithTotal[0]).join(',') + '\n'
+      // 欠席の場合キーが飛ぶのを防ぐ処理
+      let i = 0
+      while (i <= studentsWithTotal.length) {
+        if (studentsWithTotal[i].isAttending) {
+          break
+        }
+        i++
+      }
+      const header = Object.keys(studentsWithTotal[i]).join(',') + '\n'
       const body = studentsWithTotal
         .map((student) => {
           return Object.keys(student)
@@ -98,7 +111,7 @@ export default {
       // リンク先に上記で生成したURLを指定する
       download.href = url
       // download属性にファイル名を指定する
-      download.download = filename
+      download.download = filename + '_成績'
       // 作成したリンクをクリックしてダウンロードを実行する
       download.click()
       // createObjectURLで作成したオブジェクトURLを開放する

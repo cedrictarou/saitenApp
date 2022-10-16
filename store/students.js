@@ -60,6 +60,8 @@ export const actions = {
   async addAbsence({ commit }, payload) {
     await this.$db.collection('dbStudents').doc({ id: payload }).update({
       isAttending: false,
+      chishiki: 0,
+      shiko: 0,
     })
     commit('addAbsence', payload)
   },

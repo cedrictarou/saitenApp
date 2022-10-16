@@ -76,15 +76,11 @@ export default {
   async fetch() {
     this.students = await this.$db.collection('dbStudents').get()
   },
-  computed: {
-    isSetStudents() {
-      const result = this.students.length > 0 || false
-      return result
-    },
-  },
   watch: {
-    isSetStudents() {
-      this.$emit('update:isSetStudents', this.isSetStudents)
+    students() {
+      if (this.students.length > 0) {
+        this.$emit('update:isSetStudents', true)
+      } else this.$emit('update:isSetStudents', false)
     },
   },
   methods: {
@@ -118,7 +114,7 @@ export default {
           const studentData = element.split(',')
           this.students.push({
             id: Number(studentData[0]),
-            name: studentData[1],
+            name: studentData[1].slice(0, -1),
             isAttending: true,
           })
         })
