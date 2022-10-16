@@ -27,12 +27,6 @@
         <nuxt-link to="/" :class="{ disabled: disabled }">
           採点画面へ
         </nuxt-link>
-        <!-- <nuxt-link
-          to="/"
-          :disabled="isSetQuestions && isSetStudents ? false : true"
-        >
-          採点画面へ
-        </nuxt-link> -->
       </div>
     </div>
     <v-tabs v-model="tabDefault">

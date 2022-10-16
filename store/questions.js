@@ -39,14 +39,7 @@ export const mutations = {
 }
 
 export const actions = {
-  addQuestions({ commit }) {
-    const newQuestion = {
-      id: Date.now(),
-      correctNumber: 0,
-      setNumber: 5,
-      point: 2,
-      kanten: '知識・技能',
-    }
+  addQuestions({ commit }, newQuestion) {
     newQuestion.subtotal = newQuestion.setNumber * newQuestion.point
     this.$db.collection('dbQuestions').add(newQuestion)
     commit('addQuestions', newQuestion)
@@ -63,7 +56,6 @@ export const actions = {
       (question) => question.id === payload.id
     )[0]
     const newSubtotal = Number(target.setNumber) * Number(payload.value)
-
     await this.$db
       .collection('dbQuestions')
       .doc({ id: payload.id })
@@ -88,7 +80,6 @@ export const actions = {
       (question) => question.id === payload.id
     )[0]
     const newSubtotal = Number(target.point) * Number(payload.value)
-
     await this.$db
       .collection('dbQuestions')
       .doc({ id: payload.id })
