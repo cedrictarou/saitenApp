@@ -96,7 +96,6 @@ export default {
             .join(',')
         })
         .join('\n')
-
       const studentsCSV = header + body
 
       // BOMを付与する（Excelでの文字化け対策）

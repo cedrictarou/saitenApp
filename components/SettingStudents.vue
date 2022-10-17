@@ -99,7 +99,7 @@ export default {
       this.students = []
       this.isFile = true
       const file = e
-      if (!file.type.match('text/csv')) {
+      if (!file.type.match('csv')) {
         this.message = 'CSVファイルを選択してください'
         return
       }
@@ -112,9 +112,10 @@ export default {
         lines.forEach((element) => {
           // 区切り文字はカンマ
           const studentData = element.split(',')
+
           this.students.push({
             id: Number(studentData[0]),
-            name: studentData[1].slice(0, -1),
+            name: studentData[1].trim(),
             isAttending: true,
           })
         })
@@ -125,6 +126,10 @@ export default {
     },
     addStudents(newStudents) {
       this.$store.dispatch('students/addStudents', newStudents)
+    },
+    // vue-js-xlsx.js
+    deleteDropFile() {
+      this.dropFile = null
     },
   },
 }
