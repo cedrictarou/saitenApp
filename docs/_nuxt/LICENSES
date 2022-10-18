@@ -1,3 +1,11 @@
+/**!
+ * Sortable 1.10.2
+ * @author	RubaXa   <trash@rubaxa.org>
+ * @author	owenm    <owen23355@gmail.com>
+ * @license MIT
+ */
+
+
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -5,6 +13,25 @@
  * @license  MIT
  */
 
+<<<<<<< HEAD
+=======
+
+/**!
+ * Sortable 1.10.2
+ * @author	RubaXa   <trash@rubaxa.org>
+ * @author	owenm    <owen23355@gmail.com>
+ * @license MIT
+ */
+
+
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @license  MIT
+ */
+
+>>>>>>> develop
 /*!
  * The buffer module from node.js, for the browser.
  *
