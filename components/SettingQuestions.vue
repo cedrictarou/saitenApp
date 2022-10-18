@@ -63,6 +63,7 @@
       <template #default>
         <thead>
           <tr>
+            <th></th>
             <th
               v-for="(item, index) in tableHeader"
               :key="index"
@@ -73,9 +74,22 @@
             <th>削除</th>
           </tr>
         </thead>
-        <tbody>
+        <draggable
+          v-model="questions"
+          tag="tbody"
+          :options="{
+            animation: 200, //アニメーション
+            delay: 50, //スクロール防止（長押しでソート）
+          }"
+          @change="$store.dispatch('questions/changeOrder', questions)"
+        >
           <tr v-for="(question, index) in questions" :key="question.id">
-            <td>{{ index + 1 }}</td>
+            <td>
+              <v-icon>mdi-drag</v-icon>
+            </td>
+            <td>
+              {{ index + 1 }}
+            </td>
             <td>
               <v-text-field
                 :value="question.setNumber"
@@ -109,18 +123,25 @@
               </v-btn>
             </td>
           </tr>
-        </tbody>
+        </draggable>
       </template>
     </v-simple-table>
   </div>
 </template>
 
 <script>
+import draggable from 'vuedraggable'
 import Description from './tool/Description.vue'
 export default {
-  components: { Description },
+  components: { Description, draggable },
   data() {
     return {
+      list: [
+        { id: 1, name: 'Abby', sport: 'basket' },
+        { id: 2, name: 'Brooke', sport: 'foot' },
+        { id: 3, name: 'Courtenay', sport: 'volley' },
+        { id: 4, name: 'David', sport: 'rugby' },
+      ],
       tabDefault: 'settingQuestions',
       tableHeader: ['No.', '問題数', '配点', '小計', '観点'],
       kantens: ['知識・技能', '思考・表現・判断'],
@@ -185,7 +206,7 @@ export default {
         correctNumber: 0,
         setNumber: 5,
         point: 2,
-        kanten: '知識・技能',
+        kanten: '思考・表現・判断',
       }
       this.$store.dispatch('questions/addQuestions', newQuestion)
       this.questions.push(newQuestion)
