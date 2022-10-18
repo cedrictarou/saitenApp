@@ -22,13 +22,21 @@
     <div class="mt-2">
       <v-file-input
         v-model="fileName"
+        accept=".xlsm"
+        :disabled="isFile"
+        :clearable="isFile"
+        :label="message"
+        @change="arrangeData"
+      />
+      <!-- <v-file-input
+        v-model="fileName"
         accept=".csv"
         truncate-length="10"
         :disabled="isFile"
         :clearable="isFile"
         :label="message"
         @change="loadCsvFile"
-      />
+      /> -->
       <v-btn color="error" class="ml-2" @click="reset">
         <v-icon>mdi-trash-can-outline</v-icon>リセット</v-btn
       >
@@ -66,7 +74,7 @@ export default {
   components: { Description },
   data() {
     return {
-      message: 'csvファイルをアップロードしてください。',
+      message: 'xlsmファイルをアップロードしてください。',
       students: [],
       isFile: false,
       fileName: null,
@@ -92,44 +100,69 @@ export default {
       this.students = []
       this.isFile = false
       this.fileName = null
-      this.message = 'csvファイルをアップロードしてください。'
+      this.message = 'xlsmファイルをアップロードしてください。'
     },
-    loadCsvFile(e) {
-      this.message = 'アップロードされています。'
-      this.students = []
-      this.isFile = true
-      const file = e
-      if (!file.type.match('csv')) {
-        this.message = 'CSVファイルを選択してください'
-        return
-      }
-      const reader = new FileReader()
-      reader.readAsText(file, 'UTF-8')
-      reader.onload = () => {
-        const lines = reader.result.split('\n')
-        // 最初の行を削除する
-        lines.shift()
-        lines.forEach((element) => {
-          // 区切り文字はカンマ
-          const studentData = element.split(',')
+    // loadCsvFile(e) {
+    //   this.message = 'アップロードされています。'
+    //   this.students = []
+    //   this.isFile = true
+    //   const file = e
+    //   if (!file.type.match('csv')) {
+    //     this.message = 'CSVファイルを選択してください'
+    //     return
+    //   }
+    //   const reader = new FileReader()
+    //   reader.readAsText(file, 'UTF-8')
+    //   reader.onload = () => {
+    //     const lines = reader.result.split('\n')
+    //     // 最初の行を削除する
+    //     lines.shift()
+    //     lines.forEach((element) => {
+    //       // 区切り文字はカンマ
+    //       const studentData = element.split(',')
 
-          this.students.push({
-            id: Number(studentData[0]),
-            name: studentData[1].trim(),
-            isAttending: true,
-          })
-        })
-        // storeにstudentsデータを送る
-        this.addStudents(this.students)
-      }
-      this.isFile = true
-    },
+    //       this.students.push({
+    //         id: Number(studentData[0]),
+    //         name: studentData[1].trim(),
+    //         isAttending: true,
+    //       })
+    //     })
+    //     // storeにstudentsデータを送る
+    //     this.addStudents(this.students)
+    //   }
+    //   this.isFile = true
+    // },
     addStudents(newStudents) {
       this.$store.dispatch('students/addStudents', newStudents)
     },
-    // vue-js-xlsx.js
-    deleteDropFile() {
-      this.dropFile = null
+    // vue-js-xlsx.jsの処理
+    arrangeData(e) {
+      this.students = []
+      const file = e
+      this.message = 'xlsmファイルをアップロードしました。'
+      const reader = new FileReader()
+      const load = () => {
+        const jsonData = this.$xlsx.toJson(reader.result, {
+          parsingOpts: {
+            type: 'array',
+          },
+          sheetIndex: 0,
+        })
+        // jsonデータを必要な形に整形する
+        // keyがなにであっても対応できるようにする処理
+        const keyArry = Object.keys(jsonData[0])
+        jsonData.forEach((j) => {
+          this.students.push({
+            id: Number(j[keyArry[0]]),
+            name: j[keyArry[1]],
+            isAttending: true,
+          })
+        })
+      }
+      reader.onload = load
+      reader.readAsArrayBuffer(file)
+      // storeにstudentsデータを送る
+      this.addStudents(this.students)
     },
   },
 }

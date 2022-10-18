@@ -27,6 +27,7 @@ export default {
   plugins: [
     { src: '~/plugins/localbase', mode: 'client' },
     { src: '~/plugins/nuxt-client-init.js', ssr: false },
+    { src: '@/plugins/vue-js-xlsx.js', ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
