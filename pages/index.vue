@@ -82,15 +82,23 @@
         </div>
 
         <div class="d-flex justify-end ma-5">
-          <v-btn
-            :disabled="isValidated ? false : true"
-            color="success"
-            class="mr-4"
-            @click="nextStudent()"
-          >
-            <v-icon>mdi-arrow-right-thick</v-icon>
-            Next</v-btn
-          >
+          <v-tooltip top>
+            <template #activator="{ on, attrs }">
+              <v-btn
+                :disabled="isValidated ? false : true"
+                color="success"
+                class="mr-4"
+                v-bind="attrs"
+                v-on="on"
+                @click="nextStudent()"
+              >
+                <v-icon>mdi-arrow-right-thick</v-icon>
+                Next</v-btn
+              >
+            </template>
+            <span>「Ctr+Enter」で次の生徒に移動できます。 </span>
+          </v-tooltip>
+
           <v-btn color="error" @click="reset"
             ><v-icon>mdi-trash-can-outline</v-icon>Clear</v-btn
           >
