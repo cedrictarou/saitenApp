@@ -2,7 +2,8 @@ import colors from 'vuetify/es5/util/colors'
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
-  ssr: false,
+  ssr: true,
+  target: 'static',
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -83,11 +84,11 @@ export default {
     },
   },
   // githubでのdeploy
-  router: {
-    base: '/saitenApp/',
-  },
+  // router: {
+  //   base: '/saitenApp/',
+  // },
 
-  generate: {
-    dir: 'docs',
-  },
+  // generate: {
+  //   dir: 'docs',
+  // },
 }
