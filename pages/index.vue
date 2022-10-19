@@ -13,6 +13,7 @@
     <v-container v-else>
       <div>
         <h2 class="text-center">採点ページ</h2>
+
         <div class="d-flex justify-end mr-5">
           <Description>
             <template #default>
@@ -40,7 +41,6 @@
             </template>
           </Description>
         </div>
-
         <div
           class="
             status-bar
@@ -138,7 +138,7 @@
                     @keydown.prevent.down="moveNext(index)"
                     @keydown.prevent.up="movePrev(index)"
                     @keydown.prevent.enter="moveNext(index)"
-                    @keydown.meta.enter.exact="shortCutKeyForNextStudent"
+                    @keydown.enter="shortCutKeyForNextStudent"
                   ></v-text-field>
                 </td>
                 <td><span>x</span>{{ question.point }}</td>
