@@ -138,7 +138,7 @@
                     @keydown.prevent.down="moveNext(index)"
                     @keydown.prevent.up="movePrev(index)"
                     @keydown.prevent.enter="moveNext(index)"
-                    @keydown.meta.enter.exact="nextStudent()"
+                    @keydown.meta.enter.exact="shortCutKeyForNextStudent"
                   ></v-text-field>
                 </td>
                 <td><span>x</span>{{ question.point }}</td>

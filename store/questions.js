@@ -36,6 +36,10 @@ export const mutations = {
   resetQuestions(state) {
     state.questions = []
   },
+  changeOrder(state, newQuestionsArry) {
+    console.log(newQuestionsArry)
+    state.questions = newQuestionsArry
+  },
 }
 
 export const actions = {
@@ -100,5 +104,9 @@ export const actions = {
   async resetQuestions({ commit }) {
     await this.$db.collection('dbQuestions').delete()
     commit('resetQuestions')
+  },
+  async changeOrder({ commit }, newQuestionsArry) {
+    await this.$db.collection('dbQuestions').set([...newQuestionsArry])
+    commit('changeOrder', newQuestionsArry)
   },
 }
