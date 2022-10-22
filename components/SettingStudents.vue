@@ -22,21 +22,13 @@
     <div class="mt-2">
       <v-file-input
         v-model="fileName"
-        accept=".xlsm"
+        accept=".xlsx"
         :disabled="isFile"
         :clearable="isFile"
         :label="message"
         @change="arrangeData"
       />
-      <!-- <v-file-input
-        v-model="fileName"
-        accept=".csv"
-        truncate-length="10"
-        :disabled="isFile"
-        :clearable="isFile"
-        :label="message"
-        @change="loadCsvFile"
-      /> -->
+
       <v-btn color="error" class="ml-2" @click="reset">
         <v-icon>mdi-trash-can-outline</v-icon>リセット</v-btn
       >
@@ -52,14 +44,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="student in students" :key="student.id">
+          <tr
+            v-for="student in students"
+            :key="student.id"
+            :class="{ 'is-absent': !student.isAttending }"
+          >
             <td>{{ student.id }}</td>
             <td>{{ student.name }}</td>
             <td>
               <v-select
                 :value="student.isAttending ? '出席' : '欠席'"
                 :items="items"
-                @input="addAbsence(student.id)"
+                @input="addAbsence(student.id, student.isAttending)"
               ></v-select>
             </td>
           </tr>
@@ -74,73 +70,45 @@ export default {
   components: { Description },
   data() {
     return {
-      message: 'xlsmファイルをアップロードしてください。',
-      students: [],
-      isFile: false,
       fileName: null,
       items: ['出席', '欠席'],
     }
   },
-  async fetch() {
-    this.students = await this.$db.collection('dbStudents').get()
-  },
-  watch: {
+
+  computed: {
     students() {
-      if (this.students.length > 0) {
-        this.$emit('update:isSetStudents', true)
-      } else this.$emit('update:isSetStudents', false)
+      return this.$store.getters['students/students']
+    },
+    message() {
+      const text = this.students.length
+        ? 'xlsxファイルをアップロードしました。'
+        : 'xlsxファイルをアップロードしてください。'
+      return text
+    },
+    isFile() {
+      return !!this.students.length
     },
   },
+
   methods: {
-    addAbsence(id) {
-      this.$store.dispatch('students/addAbsence', id)
+    addAbsence(id, isAttending) {
+      const payload = { id, isAttending }
+      payload.isAttending = !payload.isAttending
+      this.$store.dispatch('students/addAbsence', payload)
     },
     reset() {
-      this.$store.dispatch('students/resetStudents')
-      this.students = []
-      this.isFile = false
       this.fileName = null
-      this.message = 'xlsmファイルをアップロードしてください。'
+      this.$store.dispatch('students/resetStudents')
     },
-    // loadCsvFile(e) {
-    //   this.message = 'アップロードされています。'
-    //   this.students = []
-    //   this.isFile = true
-    //   const file = e
-    //   if (!file.type.match('csv')) {
-    //     this.message = 'CSVファイルを選択してください'
-    //     return
-    //   }
-    //   const reader = new FileReader()
-    //   reader.readAsText(file, 'UTF-8')
-    //   reader.onload = () => {
-    //     const lines = reader.result.split('\n')
-    //     // 最初の行を削除する
-    //     lines.shift()
-    //     lines.forEach((element) => {
-    //       // 区切り文字はカンマ
-    //       const studentData = element.split(',')
-
-    //       this.students.push({
-    //         id: Number(studentData[0]),
-    //         name: studentData[1].trim(),
-    //         isAttending: true,
-    //       })
-    //     })
-    //     // storeにstudentsデータを送る
-    //     this.addStudents(this.students)
-    //   }
-    //   this.isFile = true
-    // },
     addStudents(newStudents) {
       this.$store.dispatch('students/addStudents', newStudents)
     },
     // vue-js-xlsx.jsの処理
     arrangeData(e) {
-      this.students = []
+      // await this.reset()
       const file = e
-      this.message = 'xlsmファイルをアップロードしました。'
       const reader = new FileReader()
+      const studentArry = []
       const load = () => {
         const jsonData = this.$xlsx.toJson(reader.result, {
           parsingOpts: {
@@ -152,7 +120,7 @@ export default {
         // keyがなにであっても対応できるようにする処理
         const keyArry = Object.keys(jsonData[0])
         jsonData.forEach((j) => {
-          this.students.push({
+          studentArry.push({
             id: Number(j[keyArry[0]]),
             name: j[keyArry[1]],
             isAttending: true,
@@ -162,10 +130,13 @@ export default {
       reader.onload = load
       reader.readAsArrayBuffer(file)
       // storeにstudentsデータを送る
-      this.addStudents(this.students)
+      this.addStudents(studentArry)
     },
   },
 }
 </script>
 <style scoped lang="scss">
+.is-absent {
+  background-color: #eeeeee;
+}
 </style>

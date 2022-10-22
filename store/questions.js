@@ -37,7 +37,6 @@ export const mutations = {
     state.questions = []
   },
   changeOrder(state, newQuestionsArry) {
-    console.log(newQuestionsArry)
     state.questions = newQuestionsArry
   },
 }
@@ -55,7 +54,6 @@ export const actions = {
     commit('changeKanten', payload)
   },
   async changePoint({ commit, getters }, payload) {
-    // subtotalを計算する処理を書く
     const target = getters.questions.filter(
       (question) => question.id === payload.id
     )[0]
@@ -79,7 +77,6 @@ export const actions = {
     commit('changeCorrectNumber', payload)
   },
   async changeSetNumber({ commit, getters }, payload) {
-    // subtotalを計算する処理を書く
     const target = getters.questions.filter(
       (question) => question.id === payload.id
     )[0]

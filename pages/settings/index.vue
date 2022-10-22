@@ -17,11 +17,11 @@
     >
       <div>
         <span>問題登録</span>
-        <span>{{ isSetQuestions ? 'OK' : 'NO' }}</span>
+        <span>{{ isSetQuestions.length ? 'OK' : 'NO' }}</span>
       </div>
       <div>
         <span>生徒登録</span>
-        <span>{{ isSetStudents ? 'OK' : 'NO' }}</span>
+        <span>{{ isSetStudents.length ? 'OK' : 'NO' }}</span>
       </div>
       <div>
         <nuxt-link to="/" :class="{ disabled: disabled }">
@@ -37,12 +37,12 @@
     <v-tabs-items v-model="tabDefault">
       <v-tab-item value="settingQuestions">
         <!-- 問題の登録 -->
-        <SettingQuestions :is-set-questions.sync="isSetQuestions" />
+        <SettingQuestions />
       </v-tab-item>
 
       <v-tab-item value="registerStudents">
         <!-- 生徒の登録 -->
-        <SettingStudents :is-set-students.sync="isSetStudents" />
+        <SettingStudents />
       </v-tab-item>
     </v-tabs-items>
   </v-container>
@@ -52,12 +52,18 @@
 export default {
   data() {
     return {
-      isSetQuestions: false,
-      isSetStudents: false,
+      // isSetQuestions: false,
+      // isSetStudents: false,
       tabDefault: 'settingQuestions',
     }
   },
   computed: {
+    isSetStudents() {
+      return this.$store.getters['students/students']
+    },
+    isSetQuestions() {
+      return this.$store.getters['questions/questions']
+    },
     // リンクを不活性化させる
     disabled() {
       const result = !this.isSetQuestions || !this.isSetStudents || false

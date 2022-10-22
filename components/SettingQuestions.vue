@@ -136,12 +136,6 @@ export default {
   components: { Description, draggable },
   data() {
     return {
-      list: [
-        { id: 1, name: 'Abby', sport: 'basket' },
-        { id: 2, name: 'Brooke', sport: 'foot' },
-        { id: 3, name: 'Courtenay', sport: 'volley' },
-        { id: 4, name: 'David', sport: 'rugby' },
-      ],
       tabDefault: 'settingQuestions',
       tableHeader: ['No.', '問題数', '配点', '小計', '観点'],
       kantens: ['知識・技能', '思考・表現・判断'],

@@ -23,8 +23,8 @@ export const mutations = {
     state.students = []
   },
   addAbsence(state, payload) {
-    const target = state.students.filter((s) => s.id === payload)[0]
-    target.isAttending = !target.isAttending
+    const target = state.students.filter((s) => s.id === payload.id)[0]
+    target.isAttending = payload.isAttending
   },
 }
 
@@ -48,6 +48,8 @@ export const actions = {
   },
   async resetStudents({ commit }) {
     await this.$db.collection('dbStudents').delete()
+    // からのdbStudentsを作る
+    await this.$db.collection('dbStudents').get()
     commit('resetStudents')
   },
   async addScoreToStudent({ commit }, scoreInfo) {
@@ -58,8 +60,8 @@ export const actions = {
     commit('addScoreToStudent', scoreInfo)
   },
   async addAbsence({ commit }, payload) {
-    await this.$db.collection('dbStudents').doc({ id: payload }).update({
-      isAttending: false,
+    await this.$db.collection('dbStudents').doc({ id: payload.id }).update({
+      isAttending: payload.isAttending,
       chishiki: 0,
       shiko: 0,
     })

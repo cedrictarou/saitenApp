@@ -8,9 +8,9 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - saiten',
-    title: 'saiten',
+    title: '採点アプリ',
     htmlAttrs: {
-      lang: 'en',
+      lang: 'ja',
     },
     meta: [
       { charset: 'utf-8' },
@@ -28,7 +28,7 @@ export default {
   plugins: [
     { src: '~/plugins/localbase', mode: 'client' },
     { src: '~/plugins/nuxt-client-init.js', ssr: false },
-    { src: '@/plugins/vue-js-xlsx.js', ssr: false },
+    { src: '~/plugins/vue-js-xlsx.js', ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
