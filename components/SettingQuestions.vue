@@ -140,14 +140,17 @@ export default {
       tableHeader: ['No.', '問題数', '配点', '小計', '観点'],
       kantens: ['知識・技能', '思考・表現・判断'],
       isValidated: false,
-      questions: [],
+      // questions: [],
     }
   },
-  async fetch() {
-    this.questions = await this.$db.collection('dbQuestions').get()
-  },
+  // async fetch() {
+  //   this.questions = await this.$db.collection('dbQuestions').get()
+  // },
 
   computed: {
+    questions() {
+      return this.$store.getters['questions/questions']
+    },
     totalScore() {
       return this.shikoTotal + this.chishikiTotal
     },
@@ -179,14 +182,10 @@ export default {
   watch: {
     totalScore() {
       this.validateMassage()
-      if (this.totalScore === 100) {
-        this.$emit('update:isSetQuestions', true)
-      } else this.$emit('update:isSetQuestions', false)
     },
   },
   methods: {
     reset() {
-      this.questions = []
       this.$store.dispatch('questions/resetQuestions')
     },
     validateMassage() {
@@ -203,11 +202,11 @@ export default {
         kanten: '思考・表現・判断',
       }
       this.$store.dispatch('questions/addQuestions', newQuestion)
-      this.questions.push(newQuestion)
+      // this.questions.push(newQuestion)
     },
     removeQuestion(id) {
       this.$store.dispatch('questions/removeQuestion', id)
-      this.questions = this.questions.filter((q) => q.id !== id)
+      // this.questions = this.questions.filter((q) => q.id !== id)
     },
     changeKanten(id, value) {
       this.$store.dispatch('questions/changeKanten', { id, value })

@@ -5,11 +5,11 @@
       class="
         d-flex
         justify-space-around
+        align-center
         blue
         lighten-5
         rounded
         mt-5
-        mx-2
         pa-5
         text-md-h5
         font-weight-bold
@@ -17,16 +17,21 @@
     >
       <div>
         <span>問題登録</span>
-        <span>{{ isSetQuestions.length ? 'OK' : 'NO' }}</span>
+        <span>{{ isTotalScoreOk ? 'OK' : 'NO' }}</span>
       </div>
       <div>
         <span>生徒登録</span>
         <span>{{ isSetStudents.length ? 'OK' : 'NO' }}</span>
       </div>
       <div>
-        <nuxt-link to="/" :class="{ disabled: disabled }">
-          採点画面へ
-        </nuxt-link>
+        <v-btn
+          depressed
+          color="primary"
+          :disabled="isDisabled"
+          @click="goSaitenPage"
+        >
+          <span class="font-weight-bold"> 採点画面へ </span>
+        </v-btn>
       </div>
     </div>
     <v-tabs v-model="tabDefault">
@@ -52,22 +57,31 @@
 export default {
   data() {
     return {
-      // isSetQuestions: false,
-      // isSetStudents: false,
       tabDefault: 'settingQuestions',
+      // isDisabled: true,
     }
   },
   computed: {
     isSetStudents() {
       return this.$store.getters['students/students']
     },
-    isSetQuestions() {
-      return this.$store.getters['questions/questions']
+
+    isTotalScoreOk() {
+      let sum = 0
+      const questions = this.$store.getters['questions/questions']
+      questions.forEach((q) => {
+        sum += q.subtotal
+      })
+      return sum === 100
     },
     // リンクを不活性化させる
-    disabled() {
-      const result = !this.isSetQuestions || !this.isSetStudents || false
-      return result
+    isDisabled() {
+      return !(this.isSetStudents.length && this.isTotalScoreOk)
+    },
+  },
+  methods: {
+    goSaitenPage() {
+      this.$router.push('/')
     },
   },
 }
