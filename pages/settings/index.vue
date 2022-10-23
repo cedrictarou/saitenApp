@@ -57,6 +57,7 @@
 export default {
   data() {
     return {
+      sheets: [{ name: 'SheetOne', data: [{ c: 2 }] }],
       tabDefault: 'settingQuestions',
       // isDisabled: true,
     }
